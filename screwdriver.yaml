@@ -324,6 +324,7 @@ jobs:
             echo "failure: expected "${SUBMODULE_DIRECTORY}" is shallow repository"
             exit 1
           fi
+
   # Test when GIT_RECURSIVE_CLONE is disabled
   # Environment variable to be tested
   # - GIT_RECURSIVE_CLONE
