@@ -1,3 +1,6 @@
 [submodule "functional-sd-setup-scm-submodule"]
 	path = functional-sd-setup-scm-submodule
 	url = git@github.com:screwdriver-cd-test/functional-sd-setup-scm-submodule.git
+[submodule "parent/functional-sd-setup-scm-submodule"]
+	path = parent/functional-sd-setup-scm-submodule
+	url = git@github.com:screwdriver-cd-test/functional-sd-setup-scm-submodule.git
