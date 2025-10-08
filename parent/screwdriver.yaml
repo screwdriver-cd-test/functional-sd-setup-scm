@@ -312,3 +312,47 @@ jobs:
             echo "failure: expected n_local_branches = 1"
             exit 1
           fi
+
+  # Test when GIT_RECURSIVE_CLONE is enabled
+  # Environment variable to be tested
+  # - GIT_RECURSIVE_CLONE
+  recursive-clone:
+    requires: [ ~commit, ~pr ]
+    environment:
+      GIT_RECURSIVE_CLONE: true
+      SUBMODULE_DIRECTORY: "functional-sd-setup-scm-submodule"
+    steps:
+      - teardown-test-recursive-clone: |
+          if [ -n "$(ls -A ${SUBMODULE_DIRECTORY})" ]; then
+            echo "success"
+          else
+            echo "failure: expected "${SUBMODULE_DIRECTORY}" has some files"
+            exit 1
+          fi
+          local_depth="$(git -C ${SUBMODULE_DIRECTORY} rev-list --count HEAD)"
+          is_shallow_repository="$(git -C ${SUBMODULE_DIRECTORY} rev-parse --is-shallow-repository)"
+          echo "local_depth: ${local_depth}"
+          echo "is_shallow_repository: ${is_shallow_repository}"
+          if [ "${local_depth}" -eq 1 ] && [ "${is_shallow_repository}" = true ]; then
+            echo "success"
+          else
+            echo "failure: expected "${SUBMODULE_DIRECTORY}" is shallow repository"
+            exit 1
+          fi
+
+  # Test when GIT_RECURSIVE_CLONE is disabled
+  # Environment variable to be tested
+  # - GIT_RECURSIVE_CLONE
+  not-recursive-clone:
+    requires: [ ~commit, ~pr ]
+    environment:
+      GIT_RECURSIVE_CLONE: false
+      SUBMODULE_DIRECTORY: "functional-sd-setup-scm-submodule"
+    steps:
+      - teardown-test-recursive-clone: |
+          if [ -z "$(ls -A ${SUBMODULE_DIRECTORY})" ]; then
+            echo "success"
+          else
+            echo "failure: expected "${SUBMODULE_DIRECTORY}" is empty"
+            exit 1
+          fi
